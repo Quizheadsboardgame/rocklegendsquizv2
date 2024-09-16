@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Quiz</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #0CC0DF; /* Background color */
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 40%;
+            max-width: 800px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Shadow */
+            padding: 20px;
+        }
+        img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+            cursor: pointer;
+            border: 5px solid #0CC0DF; /* Outer blue border color */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .qa-box {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .question {
+            font-size: 1.4em;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        .answer {
+            font-size: 1.2em;
+            color: #555;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3); /* Text shadow */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img id="quizImage" src="https://i.imgur.com/Oi7MEDz.png" alt="Quiz Image">
+        <div class="qa-box">
+            <div id="question" class="question">Click the image to get a question!</div>
+            <div id="answer" class="answer"></div>
+        </div>
+    </div>
+    
+    <script>
+        const questionsAndAnswers = [
+            { question: "Which band is known for the album 'Dark Side of the Moon'?", answer: "Pink Floyd" },
+            { question: "Who is the lead vocalist of Led Zeppelin?", answer: "Robert Plant" },
+            { question: "What legendary guitarist was part of The Jimi Hendrix Experience?", answer: "Jimi Hendrix" },
+            { question: "Which rock legend was known for his flamboyant stage presence and the song 'Bohemian Rhapsody'?", answer: "Freddie Mercury" },
+            { question: "Who is the guitarist for the Rolling Stones?", answer: "Keith Richards" },
+            { question: "Which band is famous for the album 'Back in Black'?", answer: "AC/DC" },
+            { question: "What band released 'Smells Like Teen Spirit'?", answer: "Nirvana" },
+            { question: "Who was the lead singer of The Doors?", answer: "Jim Morrison" },
+            { question: "Which band is known for the hit 'Hotel California'?", answer: "Eagles" },
+            { question: "Who is the iconic frontman of The Who?", answer: "Roger Daltrey" },
+            { question: "Which band was led by the legendary Freddie Mercury?", answer: "Queen" },
+            { question: "Who played lead guitar for the band Led Zeppelin?", answer: "Jimmy Page" },
+            { question: "Which rock legend is known for his solo work and the band Wings?", answer: "Paul McCartney" },
+            { question: "What band is famous for the song 'Stairway to Heaven'?", answer: "Led Zeppelin" },
+            { question: "Who is the guitarist and vocalist of the band Aerosmith?", answer: "Steven Tyler" },
+            { question: "Which rock band released 'Born to Run'?", answer: "Bruce Springsteen" },
+            { question: "Who is known as the 'Godfather of Punk'?", answer: "Iggy Pop" },
+            { question: "Which band is known for the album 'Nevermind'?", answer: "Nirvana" },
+            { question: "Who is the lead guitarist for the band U2?", answer: "The Edge" },
+            { question: "Which rock band was led by Ozzy Osbourne?", answer: "Black Sabbath" },
+            { question: "Who is the lead singer of the band Pearl Jam?", answer: "Eddie Vedder" },
+            { question: "Which band released the album 'London Calling'?", answer: "The Clash" },
+            { question: "Who is the frontman of the band Guns N' Roses?", answer: "Axl Rose" },
+            { question: "Which band is known for the hit 'Sweet Child O' Mine'?", answer: "Guns N' Roses" },
+            { question: "Who is the legendary guitarist of the band Jimi Hendrix Experience?", answer: "Jimi Hendrix" },
+            { question: "Which rock legend is known for his guitar solos in the band Van Halen?", answer: "Eddie Van Halen" },
+            { question: "Who was the iconic lead vocalist of AC/DC?", answer: "Bon Scott" },
+            { question: "Which band released the song 'Comfortably Numb'?", answer: "Pink Floyd" },
+            { question: "Who is the frontman of the band The Rolling Stones?", answer: "Mick Jagger" },
+            { question: "Which legendary rock band is known for 'Free Bird'?", answer: "Lynyrd Skynyrd" },
+            { question: "Who is the legendary bassist for the band The Who?", answer: "John Entwistle" },
+            { question: "Which rock band released 'Black Hole Sun'?", answer: "Soundgarden" },
+            { question: "Who is the lead singer of the band The Police?", answer: "Sting" },
+            { question: "Which rock legend was known for his powerful performances with The Who?", answer: "Pete Townshend" },
+            { question: "Who is the frontman of the band AC/DC?", answer: "Brian Johnson" },
+            { question: "Which band is known for the song 'Come Together'?", answer: "The Beatles" },
+            { question: "Who played lead guitar for the band The Rolling Stones?", answer: "Keith Richards" },
+            { question: "Which legendary guitarist is known for his work with the band Cream?", answer: "Eric Clapton" },
+            { question: "Who is the lead vocalist for the band Led Zeppelin?", answer: "Robert Plant" },
+            { question: "Which rock band released the hit 'Smells Like Teen Spirit'?", answer: "Nirvana" },
+            { question: "Who is known for his powerful voice and fronting the band Deep Purple?", answer: "Ian Gillan" },
+            { question: "Which legendary rock band released the album 'The Wall'?", answer: "Pink Floyd" },
+            { question: "Who is the lead guitarist for the band Aerosmith?", answer: "Joe Perry" },
+            { question: "Which rock band is famous for the hit 'Dream On'?", answer: "Aerosmith" },
+            { question: "Who was the lead guitarist and vocalist for the band AC/DC?", answer: "Angus Young" },
+            { question: "Which band released the hit 'Layla'?", answer: "Derek and the Dominos" },
+            { question: "Who is known for his powerful guitar solos with the band Santana?", answer: "Carlos Santana" },
+            { question: "Which rock legend is known for his iconic album 'Born to Run'?", answer: "Bruce Springsteen" },
+            { question: "Who is the lead guitarist of the band The Edge?", answer: "U2" },
+            { question: "Which band is known for the album 'Houses of the Holy'?", answer: "Led Zeppelin" },
+            { question: "Who is the lead singer of the band The Killers?", answer: "Brandon Flowers" },
+            { question: "Which legendary rock band released 'Rocket Man'?", answer: "Elton John" },
+            { question: "Who is the frontman of the band Pearl Jam?", answer: "Eddie Vedder" },
+            { question: "Which rock band is known for the song 'Livin' on a Prayer'?", answer: "Bon Jovi" },
+            { question: "Who is known for his solo career and his work with Fleetwood Mac?", answer: "Lindsey Buckingham" },
+            { question: "Which rock legend is known for his album 'A Night at the Opera'?", answer: "Queen" },
+            { question: "Who played lead guitar for the band The Rolling Stones?", answer: "Keith Richards" },
+            { question: "Which band is known for the song 'Barracuda'?", answer: "Heart" },
+            { question: "Who is the lead guitarist for the band Iron Maiden?", answer: "Dave Murray" },
+            { question: "Which rock legend is known for his powerful performances with The Rolling Stones?", answer: "Mick Jagger" },
+            { question: "Who is the lead vocalist of the band Guns N' Roses?", answer: "Axl Rose" },
+            { question: "Which rock band is famous for the song 'Sweet Emotion'?", answer: "Aerosmith" },
+            { question: "Who is the lead guitarist and vocalist for the band Deep Purple?", answer: "Ritchie Blackmore" },
+            { question: "Which rock legend is known for his work with the band The Band?", answer: "Robbie Robertson" },
+            { question: "Who is known for his solo work and as the frontman of the band Oasis?", answer: "Noel Gallagher" },
+            { question: "Which legendary rock band released the album 'Paranoid'?", answer: "Black Sabbath" },
+            { question: "Who is the iconic frontman of the band The Doors?", answer: "Jim Morrison" },
+            { question: "Which rock legend is known for his distinctive voice and work with the band Queen?", answer: "Freddie Mercury" },
+            { question: "Who is the lead guitarist of the band ZZ Top?", answer: "Billy Gibbons" },
+            { question: "Which rock band released the hit 'The Final Countdown'?", answer: "Europe" },
+            { question: "Who is the legendary bassist for the band Motörhead?", answer: "Lemmy Kilmister" },
+            { question: "Which rock band is known for the song 'With or Without You'?", answer: "U2" },
+            { question: "Who is the lead singer of the band The Clash?", answer: "Joe Strummer" },
+            { question: "Which legendary rock band released the album 'Appetite for Destruction'?", answer: "Guns N' Roses" },
+            { question: "Who is the iconic guitarist for the band Fleetwood Mac?", answer: "Lindsey Buckingham" },
+            { question: "Which band is known for the song 'Sympathy for the Devil'?", answer: "The Rolling Stones" }
+        ];
+
+        document.getElementById('quizImage').addEventListener('click', function() {
+            const randomIndex = Math.floor(Math.random() * questionsAndAnswers.length);
+            const question = questionsAndAnswers[randomIndex].question;
+            const answer = questionsAndAnswers[randomIndex].answer;
+
+            document.getElementById('question').textContent = question;
+            document.getElementById('answer').textContent = answer;
+        });
+    </script>
+</body>
+</html>
